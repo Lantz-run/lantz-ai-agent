@@ -1,4 +1,4 @@
-package com.lantz.lantzaiagent.contant;
+package com.lantz.lantzaiagent.demo.invoke;
 
 /**
  * <p>Project: lantz-ai-agent

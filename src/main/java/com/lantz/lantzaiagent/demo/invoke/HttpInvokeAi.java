@@ -5,10 +5,13 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONArray;
 
+
+/**
+ * 阿里云千问大模型 http 调用
+ */
 public class HttpInvokeAi {
     
     private static final String API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation";
-    private static final String DASHSCOPE_API_KEY = "your_api_key_here"; // 替换为实际的API Key
     
     public static void main(String[] args) {
         // 构建请求体
@@ -17,7 +20,7 @@ public class HttpInvokeAi {
         try {
             // 发送HTTP POST请求
             HttpResponse response = HttpRequest.post(API_URL)
-                    .header("Authorization", "Bearer " + DASHSCOPE_API_KEY)
+                    .header("Authorization", "Bearer " + TestAiKey.API_KEY)
                     .header("Content-Type", "application/json")
                     .body(requestBody.toString())
                     .execute();
@@ -48,7 +51,7 @@ public class HttpInvokeAi {
         // 用户消息
         JSONObject userMessage = new JSONObject();
         userMessage.put("role", "user");
-        userMessage.put("content", "你是谁？");
+        userMessage.put("content", "我是lantz，很高兴和你交流编程知识！");
         messages.add(userMessage);
         
         // 构建input对象
