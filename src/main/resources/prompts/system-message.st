@@ -3,6 +3,6 @@
   - {single}
   - {relationship}
   - {married}
-  {details}，
+  {details}
   {solution}
 
