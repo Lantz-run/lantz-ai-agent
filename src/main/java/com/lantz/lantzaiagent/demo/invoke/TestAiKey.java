@@ -10,5 +10,5 @@ package com.lantz.lantzaiagent.demo.invoke;
  * @since 1.8
  */
 public interface TestAiKey {
-    String API_KEY = "YOUR_KEY";
+    String API_KEY = "";
 }
