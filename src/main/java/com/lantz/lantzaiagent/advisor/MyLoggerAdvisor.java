@@ -1,6 +1,8 @@
 package com.lantz.lantzaiagent.advisor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import reactor.core.publisher.Flux;
 
 import org.springframework.ai.chat.client.advisor.api.AdvisedRequest;
@@ -20,7 +22,7 @@ public class MyLoggerAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
 
 	@Override
 	public String getName() {
-		return "这是lantz自定义的拦截器";
+		return "日志拦截器";
 	}
 
 	@Override
