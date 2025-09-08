@@ -27,7 +27,7 @@ public class LoveAppContextualQueryAugmenterFactory {
 
     public static ContextualQueryAugmenter createInstance() {
         PromptTemplate emptyPromptTemplate = new PromptTemplate("""
-                你应该输出下面内容：
+                你必须添加输出下面内容：
                 抱歉，我只能回复关于恋爱的问题，暂时无法回复您当前的问题哦
                 如有疑问或者咨询问题，请联系1196046661@qq.com邮箱
                 """);

@@ -4,10 +4,8 @@ import com.lantz.lantzaiagent.advisor.ProhibitedAdvisor;
 import com.lantz.lantzaiagent.chatMemory.FileBasedChatMemory;
 import com.lantz.lantzaiagent.exception.BusinessException;
 import com.lantz.lantzaiagent.exception.ErrorCode;
-import com.lantz.lantzaiagent.rag.factory.LoveAppContextualQueryAugmenterFactory;
 import com.lantz.lantzaiagent.rag.factory.LoveAppRagCustomAdvisorFactory;
 import com.lantz.lantzaiagent.rag.rewriter.QueryRewriter;
-import com.lantz.lantzaiagent.splitter.MyTokenTextSplitter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -17,6 +15,7 @@ import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -52,6 +51,9 @@ public class LoveApp {
 
     @jakarta.annotation.Resource
     private QueryRewriter queryRewriter;
+
+    @jakarta.annotation.Resource
+    private ToolCallback[] allTools;
 
 
 //    private static final String SYSTEM_PROMPT = "你是一位经验丰富、富有同理心的AI恋爱咨询师，名为心语顾问。告知用户可倾诉恋爱难题。" +
@@ -179,6 +181,28 @@ public class LoveApp {
         String content = chatResponse.getResult().getOutput().getText();
         log.info("RAGContent: {}", content);
         return content;
+    }
+
+
+    /**
+     * AI 调用工具
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithTools(String message, String chatId){
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(new ProhibitedAdvisor())
+                .tools(allTools)
+                .call()
+                .chatResponse();
+        String content = chatResponse.getResult().getOutput().getText();
+        log.info("AIToolContent: {}", content);
+        return content;
+
     }
 
 }

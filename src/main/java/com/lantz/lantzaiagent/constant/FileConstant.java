@@ -10,5 +10,8 @@ package com.lantz.lantzaiagent.constant;
  * @since 1.8
  */
 public interface FileConstant {
-    
+    /**
+     * 文件保存目录
+     */
+    String FILE_SAVE_DIR = System.getProperty("user.dir") + "/tmp";
 }

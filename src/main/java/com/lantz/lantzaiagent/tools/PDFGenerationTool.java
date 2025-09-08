@@ -1,0 +1,61 @@
+package com.lantz.lantzaiagent.tools;
+
+import cn.hutool.core.io.FileUtil;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.lantz.lantzaiagent.constant.FileConstant;
+import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
+
+import java.io.File;
+
+/**
+ * <p>Project: lantz-ai-agent
+ * <p>Powered by Lantz On 2025/9/2
+ *
+ * @author Lantz
+ * @version 1.0
+ * @Description PDFGenerationTool
+ * @since 1.8
+ */
+public class PDFGenerationTool {
+
+    @Tool(description = "Generate pdf file with given content")
+    public String generatePDF(
+            @ToolParam(description = "Name of the file to save the generated pdf") String fileName,
+            @ToolParam(description = "Content of be included in pdf") String content
+    ) {
+        String fileDir = FileConstant.FILE_SAVE_DIR + "/pdf";
+        String filePath = fileDir + "/" + fileName;
+
+        try {
+            // 创建目录
+            FileUtil.mkdir(fileDir);
+            // 创建 pdfWriter 和 pdfDocument 对象
+            try(PdfWriter writer = new PdfWriter(filePath);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf)) {
+
+                // 使用内置中文字体
+                PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H");
+                document.setFont(font);
+
+                // 创建段落
+                Paragraph paragraph = new Paragraph(content);
+
+                // 添加段落到文档
+                document.add(paragraph);
+            }
+            return "PDF generate successfully to: " + filePath;
+        } catch (Exception e) {
+            return "Error generate pdf" + e.getMessage();
+        }
+    }
+
+}
+
+

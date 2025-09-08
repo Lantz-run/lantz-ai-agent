@@ -24,4 +24,8 @@ knife4j:
   enable: true
   setting:
     language: zh_cn
+# 监控工具调用调试日志
+logging:
+  level:
+    org.springframework.ai: DEBUG
 
