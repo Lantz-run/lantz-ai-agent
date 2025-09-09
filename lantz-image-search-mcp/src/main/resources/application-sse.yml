@@ -1,0 +1,9 @@
+spring:
+  ai:
+    mcp:
+      server:
+        name: lantz-image-search-mcp
+        version: 0.0.1
+        type: SYNC
+        # stdio
+        stdio: false

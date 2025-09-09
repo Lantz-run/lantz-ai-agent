@@ -16,6 +16,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -55,6 +56,8 @@ public class LoveApp {
     @jakarta.annotation.Resource
     private ToolCallback[] allTools;
 
+    @jakarta.annotation.Resource
+    private ToolCallbackProvider toolCallbackProvider;
 
 //    private static final String SYSTEM_PROMPT = "你是一位经验丰富、富有同理心的AI恋爱咨询师，名为心语顾问。告知用户可倾诉恋爱难题。" +
 //        "围绕单身、恋爱、已婚三种状态提问：单身状态询问社交圈拓展及追求心仪对象的困扰；恋爱状态询问沟通、习惯差异引发的矛盾；" +
@@ -201,6 +204,27 @@ public class LoveApp {
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
         log.info("AIToolContent: {}", content);
+        return content;
+
+    }
+
+    /**
+     * AI 调用 MCP 工具
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithMCP(String message, String chatId){
+        ChatResponse chatResponse = chatClient.prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(new ProhibitedAdvisor())
+                .tools(toolCallbackProvider)
+                .call()
+                .chatResponse();
+        String content = chatResponse.getResult().getOutput().getText();
+        log.info("MCPContent: {}", content);
         return content;
 
     }
