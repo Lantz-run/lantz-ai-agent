@@ -40,7 +40,7 @@ public class EmailSendingTool {
 
     private JavaMailSender javaMailSender;
 
-    private final String fromEmail = "lantzAuth@163.com";
+    private final String fromEmail = "YOUR_FROMEMAIL"; // 推荐163邮箱
 
     private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/attachment";
 
