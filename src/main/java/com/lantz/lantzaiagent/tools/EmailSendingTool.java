@@ -40,7 +40,7 @@ public class EmailSendingTool {
 
     private JavaMailSender javaMailSender;
 
-    private final String fromEmail = "YOUR_FROM_MAIL";
+    private final String fromEmail = "YOUR_FROM_MAIL"; // 推荐 163 邮箱
 
     private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/pdf";
 
@@ -190,43 +190,6 @@ public class EmailSendingTool {
         } catch (MessagingException e) {
             return "Fail sending email! " + e.getMessage();
         }
-    }
-
-    /**
-     * 生成文件
-     *
-     * @param attachmentSuffix
-     * @return
-     */
-    // todo 1. 生成的文件并作为附件发送邮件; 2. 支持联网生成内容写入文件发送
-    private String generateFile(String fileName, String content, String attachmentSuffix) {
-        if (attachmentSuffix.equals(".pdf")) {
-            String fileDir = FileConstant.FILE_SAVE_DIR + "/attachment/pdf";
-            String filePath = fileDir + "/" + fileName;
-            try {
-                // 创建目录
-                FileUtil.mkdir(filePath);
-                // 创建 pdfWriter 和 pdfDocument 对象
-                try (PdfWriter writer = new PdfWriter(filePath);
-                     PdfDocument pdf = new PdfDocument(writer);
-                     Document document = new Document(pdf)) {
-
-                    // 使用内置中文字体
-                    PdfFont font = PdfFontFactory.createFont("STSongStd-Light", "UniGB-UCS2-H");
-                    document.setFont(font);
-
-                    // 创建段落
-                    Paragraph paragraph = new Paragraph(content);
-
-                    // 添加段落到文档
-                    document.add(paragraph);
-                }
-                return "PDF generate successfully to: " + filePath;
-            } catch (Exception e) {
-                return "Error generate pdf" + e.getMessage();
-            }
-        }
-        return "";
     }
 
 }
