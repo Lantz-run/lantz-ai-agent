@@ -23,6 +23,21 @@ public class ToolRegistration {
     @Value("${searchapi.apikey}")
     private String apiKey;
 
+    @Value("${spring.mail.password}")
+    private String password;
+
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @Value("${spring.mail.port}")
+    private int port;
+
+    @Value("${spring.mail.protocol}")
+    private String protocol;
+
     @Bean
     public ToolCallback[] allTools(){
         FileOperationTool fileOperationTool = new FileOperationTool();
@@ -31,6 +46,8 @@ public class ToolRegistration {
         TerminalOperationTool terminalOperationTool = new TerminalOperationTool();
         WebSearchTool webSearchTool = new WebSearchTool(apiKey);
         WebScrapingTool webScrapingTool = new WebScrapingTool();
+        TerminateTool terminateTool = new TerminateTool();
+        EmailSendingTool emailSendingTool = new EmailSendingTool(host, port, username, password, protocol);
 
         return ToolCallbacks.from(
                 fileOperationTool,
@@ -38,7 +55,9 @@ public class ToolRegistration {
                 resourceDownloadTool,
                 terminalOperationTool,
                 webScrapingTool,
-                webSearchTool
+                webSearchTool,
+                terminateTool,
+                emailSendingTool
         );
     }
 

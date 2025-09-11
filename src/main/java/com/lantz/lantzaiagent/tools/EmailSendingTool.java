@@ -40,9 +40,9 @@ public class EmailSendingTool {
 
     private JavaMailSender javaMailSender;
 
-    private final String fromEmail = "lantzAuth@163.com";
+    private final String fromEmail = "YOUR_FROM_MAIL";
 
-    private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/attachment";
+    private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/pdf";
 
     private String host;
 
@@ -52,12 +52,15 @@ public class EmailSendingTool {
 
     private String password;
 
+    private String protocol;
 
-    public EmailSendingTool(String host, int port, String username, String password) {
+
+    public EmailSendingTool(String host, int port, String username, String password, String protocol) {
         this.host = host;
         this.port = port;
         this.username = username;
         this.password = password;
+        this.protocol = protocol;
     }
 
     /**
@@ -170,7 +173,7 @@ public class EmailSendingTool {
             messageHelper.setFrom(fromEmail);        // 设置发件人邮箱
             messageHelper.setTo(toEmail);            // 设置收件人邮箱
             messageHelper.setSubject(subject);       // 设置邮件主题
-            String fileSaveDir = FileConstant.FILE_SAVE_DIR + "/attachment";
+            String fileSaveDir = FileConstant.FILE_SAVE_DIR + "/pdf";
 
             // 创建目录
             FileUtil.mkdir(ATTATCH_FILE_DIR);
