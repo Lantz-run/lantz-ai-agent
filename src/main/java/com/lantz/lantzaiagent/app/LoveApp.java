@@ -21,6 +21,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
@@ -134,6 +135,22 @@ public class LoveApp {
         String content = chatResponse.getResult().getOutput().getText();
         log.info("content: {}", content);
         return content;
+    }
+
+    /**
+     * 响应式对象
+     *
+     * @param message
+     * @param chatId
+     */
+    public Flux<String> doChatByStream(String message, String chatId) {
+        return chatClient.prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(new ProhibitedAdvisor())
+                .stream()
+                .content();
     }
 
     // 定义一个记录

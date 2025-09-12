@@ -40,9 +40,9 @@ public class EmailSendingTool {
 
     private JavaMailSender javaMailSender;
 
-    private final String fromEmail = "YOUR_FROM_MAIL"; // 推荐 163 邮箱
+    private final String fromEmail = "lantzAuth@163.com"; // 推荐 163 邮箱
 
-    private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/pdf";
+    private String ATTATCH_FILE_DIR = FileConstant.FILE_SAVE_DIR + "/file";
 
     private String host;
 
@@ -173,7 +173,7 @@ public class EmailSendingTool {
             messageHelper.setFrom(fromEmail);        // 设置发件人邮箱
             messageHelper.setTo(toEmail);            // 设置收件人邮箱
             messageHelper.setSubject(subject);       // 设置邮件主题
-            String fileSaveDir = FileConstant.FILE_SAVE_DIR + "/pdf";
+            String fileSaveDir = FileConstant.FILE_SAVE_DIR + "/file";
 
             // 创建目录
             FileUtil.mkdir(ATTATCH_FILE_DIR);

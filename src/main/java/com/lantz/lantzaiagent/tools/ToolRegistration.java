@@ -52,10 +52,10 @@ public class ToolRegistration {
         return ToolCallbacks.from(
                 fileOperationTool,
                 pdfGenerationTool,
-                resourceDownloadTool,
-                terminalOperationTool,
-                webScrapingTool,
-                webSearchTool,
+//                resourceDownloadTool,
+//                terminalOperationTool,
+//                webScrapingTool,
+//                webSearchTool,
                 terminateTool,
                 emailSendingTool
         );

@@ -33,7 +33,7 @@ public class LantzManus extends ToolCallAgent{
                 you closer to completing the task.
                 """;
         this.setNextStepPrompt(NEXT_STEP_PROMPT);
-        this.setMaxStep(20);
+        this.setMaxStep(10);
         // 初始化客户端
         ChatClient chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultAdvisors(new ProhibitedAdvisor())

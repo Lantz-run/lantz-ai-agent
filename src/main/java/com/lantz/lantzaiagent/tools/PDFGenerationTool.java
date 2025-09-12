@@ -29,7 +29,7 @@ public class PDFGenerationTool {
             @ToolParam(description = "Name of the file to save the generated pdf") String fileName,
             @ToolParam(description = "Content of be included in pdf") String content
     ) {
-        String fileDir = FileConstant.FILE_SAVE_DIR + "/pdf";
+        String fileDir = FileConstant.FILE_SAVE_DIR + "/file";
         String filePath = fileDir + "/" + fileName;
 
         try {
