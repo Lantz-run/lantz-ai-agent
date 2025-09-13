@@ -18,7 +18,7 @@ public enum ErrorCode {
     PARAMS_ERROR(40000, "请求参数错误"),
     TEXT_ERROR(42200, "含违禁词"),
     NOT_LOGIN_ERROR(40100, "未登录"),
-    NOT_AUTH_ERROR(40101, "无权限"),
+    NO_AUTH_ERROR(40101, "无权限"),
     NOT_FOUND_ERROR(40401, "请求数据不存在"),
     FORBIDDEN_ERROR(40301, "禁止访问"),
     SYSTEM_ERROR(50000, "系统错误"),
