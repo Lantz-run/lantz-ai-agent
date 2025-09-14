@@ -1,11 +1,18 @@
 package com.lantz.lantzaiagent.controller;
 
 import com.lantz.lantzaiagent.agent.LantzManus;
+import com.lantz.lantzaiagent.annotation.AuthCheck;
 import com.lantz.lantzaiagent.app.LoveApp;
+import com.lantz.lantzaiagent.constant.UserConstant;
+import com.lantz.lantzaiagent.model.entity.User;
+import com.lantz.lantzaiagent.model.enums.LoveStateEnum;
+import com.lantz.lantzaiagent.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +43,9 @@ public class AiController {
     @Resource
     private ChatModel dashscopeChatModel;
 
+    @Resource
+    private UserService userService;
+
 
     /**
      * 同步调用 ai 聊天
@@ -55,8 +65,33 @@ public class AiController {
      * @return
      */
     @GetMapping(value = "/love_app/ai_chat/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> doChatWithLoveAppSSE(String message, String chatId){
+    public Flux<String> doChatWithLoveAppSSE(String message, String chatId, HttpServletRequest request){
+        User loginUser = userService.getLoginUser(request);
+        Long loginUserId = loginUser.getId();
+        if (loginUserId == null) {
+            return null;
+        }
         return loveApp.doChatByStream(message, chatId);
+    }
+
+
+    /**
+     * 同步调用 ai 聊天（流式接口）-- 基于rag知识库
+     * @param message
+     * @param chatId
+     * @return
+     */
+    @GetMapping(value = "/love_app/ai_chat_rag/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> doChatWithRAGLoveAppSSE(String message, String chatId, String state, HttpServletRequest request){
+        if (LoveStateEnum.getEnumByValue(state) == null) {
+            return null;
+        }
+        User loginUser = userService.getLoginUser(request);
+        Long loginUserId = loginUser.getId();
+        if (loginUserId == null) {
+            return null;
+        }
+        return loveApp.doChatWithRagByStream(message, chatId, state);
     }
 
     /**
@@ -65,6 +100,7 @@ public class AiController {
      * @param chatId
      * @return
      */
+
     @GetMapping(value = "/love_app/ai_chat/serverSentEvent")
     public Flux<ServerSentEvent<String>> doChatWithLoveAppServerSentEvent(String message, String chatId){
         return loveApp.doChatByStream(message, chatId)
@@ -108,6 +144,7 @@ public class AiController {
      * @param message 用户提示词
      * @return
      */
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @GetMapping("/manus/ai_chat")
     public SseEmitter doChatWithManus(String message){
         LantzManus lantzManus = new LantzManus(allTools, dashscopeChatModel);

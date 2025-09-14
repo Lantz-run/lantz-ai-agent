@@ -2,6 +2,7 @@ export type SseOptions = {
   onMessage: (data: string) => void
   onError?: (e: Event) => void
   onOpen?: () => void
+  onClose?: () => void
 }
 
 export function openSse(url: string, options: SseOptions) {
@@ -11,6 +12,7 @@ export function openSse(url: string, options: SseOptions) {
   }
   eventSource.onerror = (e) => {
     options.onError?.(e)
+    options.onClose?.()
     eventSource.close()
   }
   eventSource.onopen = () => {

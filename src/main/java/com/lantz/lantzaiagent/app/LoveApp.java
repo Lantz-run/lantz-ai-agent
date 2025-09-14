@@ -2,8 +2,10 @@ package com.lantz.lantzaiagent.app;
 
 import com.lantz.lantzaiagent.advisor.ProhibitedAdvisor;
 import com.lantz.lantzaiagent.chatMemory.FileBasedChatMemory;
+import com.lantz.lantzaiagent.chatMemory.MySQLBaseChatMemory;
 import com.lantz.lantzaiagent.exception.BusinessException;
 import com.lantz.lantzaiagent.exception.ErrorCode;
+import com.lantz.lantzaiagent.rag.factory.LoveAppContextualQueryAugmenterFactory;
 import com.lantz.lantzaiagent.rag.factory.LoveAppRagCustomAdvisorFactory;
 import com.lantz.lantzaiagent.rag.rewriter.QueryRewriter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +13,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -98,19 +102,20 @@ public class LoveApp {
      * @param dashscopeModel 大模型
      */
     public LoveApp(ChatModel dashscopeModel,
-                   @Value("classpath:prompts/system-message.st") Resource systemResource) {
+                   @Value("classpath:prompts/system-message.st") Resource systemResource,
+                   MySQLBaseChatMemory chatMemory) {
         // 构造函数中处理系统提示词
         this.systemPrompt = systemPrompt(systemResource);
         // 基于内存持久化
-//        ChatMemory chatMemory = new InMemoryChatMemory();
+//        ChatMemory chatMemory1 = new InMemoryChatMemory();
         // 基于文件持久化
         String fileDir = System.getProperty("user.dir") + "/tmp/chat-memory";
-        FileBasedChatMemory chatMemory = new FileBasedChatMemory(fileDir);
+        FileBasedChatMemory fileChatMemory = new FileBasedChatMemory(fileDir);
 
         chatClient = ChatClient.builder(dashscopeModel)
                 .defaultSystem(systemPrompt)
                 .defaultAdvisors(
-                        new MessageChatMemoryAdvisor(chatMemory),
+                        new MessageChatMemoryAdvisor(fileChatMemory),
 //                        new MyLoggerAdvisor(),      // 自定义日志拦截器
                         new ProhibitedAdvisor()     // 违禁词拦截器
 //                        new ReReadingAdvisor()    // 自定义重写拦截器
@@ -179,28 +184,53 @@ public class LoveApp {
     /*
         RAG 知识库
     */
-    public String doChatWithRag(String message, String chatId) {
+    public String doChatWithRag(String message, String chatId, String state) {
         // 查询重写
         String reWriteMessage = queryRewriter.queryWriterTransformer(message);
         ChatResponse chatResponse = chatClient.prompt()
                 .user(reWriteMessage) // 注入重写后的文本
                 .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
                         .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
-                .advisors(new QuestionAnswerAdvisor(loveAppVectorStore)) // 应用知识库回答
-//                .advisors(loveAppRagCloudAdvisor) // 应用云知识库
+//                .advisors(new QuestionAnswerAdvisor(loveAppVectorStore)) // 应用知识库回答
+                .advisors(loveAppRagCloudAdvisor) // 应用云知识库
                 .advisors(
                         new ProhibitedAdvisor() // 违禁词拦截器
 //                        new MyLoggerAdvisor() // 日志拦截器
                 )
                 .advisors(
                         LoveAppRagCustomAdvisorFactory
-                                .createLoveAppRagCustomAdvisor(loveAppVectorStore, "已婚")
+                                .createLoveAppRagCustomAdvisor(loveAppVectorStore, state)
                 ) // 文档检索增强
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
         log.info("RAGContent: {}", content);
         return content;
+    }
+
+    /**
+     * 流式输出
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public Flux<String> doChatWithRagByStream(String message, String chatId, String state) {
+        // 查询重写
+        String reWriteMessage = queryRewriter.queryWriterTransformer(message);
+        return chatClient.prompt()
+                .user(reWriteMessage) // 注入重写后的文本
+                .advisors(spec -> spec.param(CHAT_MEMORY_CONVERSATION_ID_KEY, chatId)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 10))
+                .advisors(loveAppRagCloudAdvisor) // 应用云知识库
+                .advisors(
+                        new ProhibitedAdvisor() // 违禁词拦截器
+                )
+                .advisors(
+                        LoveAppRagCustomAdvisorFactory
+                                .createLoveAppRagCustomAdvisor(loveAppVectorStore, state)
+                ) // 文档检索增强
+                .stream()
+                .content();
     }
 
 
