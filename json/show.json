@@ -1,22 +1,13 @@
 {
-  "output": {
-    "choices": [
-      {
-        "message": {
-          "content": "你好，Lantz！很高兴认识你 😊 编程是一个非常有趣且充满挑战的领域，我很期待和你一起探讨相关知识！无论你是想讨论具体编程语言、算法、项目开发，还是其他技术问题，我都很乐意帮助你。有什么想聊的或需要解答的问题吗？",
-          "role": "assistant"
-        },
-        "finish_reason": "stop"
-      }
-    ]
-  },
-  "usage": {
-    "total_tokens": 99,
-    "output_tokens": 65,
-    "input_tokens": 34,
-    "prompt_tokens_details": {
-      "cached_tokens": 0
-    }
-  },
-  "request_id": "d4700d53-af97-983a-9298-3bd9d1d8ec1f"
+  "toolCalls": [],
+  "media": [],
+  "messageType": "ASSISTANT",
+  "textContent": "你好呀，小明！很高兴认识你～我是心语顾问，专门陪伴大家走过感情中的点点滴滴。✨  \n能遇见你真的很温暖呢！\n\n在开始之前，我想先了解你现在的感情状态，这样我才能更好地陪你梳理心情哦：\n\n- 如果你现在是**单身**，是在结识新朋友、靠近心动的人时感到困扰吗？  \n- 如果你正在**恋爱中**，是和另一半因为某些习惯或沟通方式产生了摩擦吗？  \n- 又或者你已经**结婚了**，正在面对家庭责任、与亲人相处的挑战？\n\n无论哪一种，我都愿意静静地听你说说——  \n最近发生了什么事？对方是怎么回应的？你心里又有什么感受和想法呢？  \n\n在这里，你可以放心倾诉，我会用理解和温柔，陪你一起找到属于你的答案 🌿",
+  "metadata": {
+    "finishReason": "STOP",
+    "role": "ASSISTANT",
+    "id": "5bcd1e3e-da7d-4ad5-8e4a-61d0b80e49e8",
+    "messageType": "ASSISTANT",
+    "reasoningContent": ""
+  }
 }

@@ -33,15 +33,19 @@ class EmailSendingToolTest {
     @Value("${spring.mail.port}")
     private int port;
 
+    @Value("${spring.mail.protocol}")
+    private String protocol;
+
     @Test
     void sendTextEmail() {
-        EmailSendingTool tool = new EmailSendingTool(host, port, username, password);
+        EmailSendingTool tool = new EmailSendingTool(host, port, username, password, protocol);
         String subject = "恋爱计划";
         String toEmail = "1196046661@qq.com";
-//        String content = "<h2 style='color:blue;'>这是一封测试邮件</h2><p>古巨基 - 情歌王</p>";
-        String content = "这是一封恋爱约会计划邮件 lantz";
-        String filename = "七夕约会计划.pdf";
-        String result = tool.sendAttachEmail(subject, toEmail, content, filename);
+        String content = "<h2 style='color:blue;'>这是一封测试邮件</h2><p>古巨基 - 情歌王</p>";
+//        String content = "这是一封恋爱约会计划邮件 lantz";
+        String filename = "date_plan.pdf";
+//        String result = tool.sendAttachEmail(subject, toEmail, content, filename);
+        String result = tool.sendHtmlEmail(subject, toEmail, content);
         assertNotNull(result);
 
     }

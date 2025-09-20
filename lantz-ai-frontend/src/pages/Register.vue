@@ -14,9 +14,12 @@
             v-model="form.userAccount" 
             type="text" 
             placeholder="请输入账户名"
+            minlength="4"
+            title="账户名需大于等于4位"
             required
             :disabled="loading"
           />
+          <div class="error-text" v-if="form.userAccount && !isAccountValid">账户名需大于等于4位</div>
         </div>
         
         <div class="input-group">
@@ -25,9 +28,12 @@
             v-model="form.userName" 
             type="text" 
             placeholder="请输入用户名"
+            minlength="1"
+            title="用户名需大于等于1位"
             required
             :disabled="loading"
           />
+          <div class="error-text" v-if="form.userName && !isNameValid">用户名需大于等于1位</div>
         </div>
         
         <div class="input-group">
@@ -36,9 +42,12 @@
             v-model="form.userPassword" 
             type="password" 
             placeholder="请输入密码"
+            minlength="8"
+            title="密码需大于等于8位"
             required
             :disabled="loading"
           />
+          <div class="error-text" v-if="form.userPassword && !isPasswordValid">密码需大于等于8位</div>
         </div>
         
         <div class="input-group">
@@ -50,9 +59,10 @@
             required
             :disabled="loading"
           />
+          <div class="error-text" v-if="form.checkPassword && form.userPassword !== form.checkPassword">两次输入的密码不一致</div>
         </div>
         
-        <button type="submit" :disabled="loading" class="submit-btn">
+        <button type="submit" :disabled="loading || !isAccountValid || !isNameValid || !isPasswordValid || form.userPassword !== form.checkPassword" class="submit-btn">
           <span v-if="loading">注册中...</span>
           <span v-else>注册</span>
         </button>
@@ -66,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
@@ -82,6 +92,10 @@ const form = reactive({
 })
 
 const glowStyle = ref<Record<string, string>>({})
+
+const isAccountValid = computed(() => form.userAccount.trim().length >= 4)
+const isNameValid = computed(() => form.userName.trim().length >= 1)
+const isPasswordValid = computed(() => form.userPassword.length >= 8)
 
 function onMouseMove(e: MouseEvent) {
   const el = e.currentTarget as HTMLElement
@@ -100,6 +114,18 @@ function onMouseLeave() {
 async function handleRegister() {
   if (!form.userAccount || !form.userName || !form.userPassword || !form.checkPassword) return
   
+  if (!isAccountValid.value) {
+    alert('账户名需大于等于4位')
+    return
+  }
+  if (!isNameValid.value) {
+    alert('用户名需大于等于1位')
+    return
+  }
+  if (!isPasswordValid.value) {
+    alert('密码需大于等于8位')
+    return
+  }
   if (form.userPassword !== form.checkPassword) {
     alert('两次输入的密码不一致')
     return
@@ -225,6 +251,12 @@ async function handleRegister() {
 .submit-btn:disabled {
   opacity: .6;
   cursor: not-allowed;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .footer {

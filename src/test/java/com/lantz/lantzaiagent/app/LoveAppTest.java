@@ -48,14 +48,14 @@ class LoveAppTest {
         String chatId = UUID.randomUUID().toString();
         String chat1 = loveApp.doChat(message, chatId);
         Assertions.assertNotNull(chat1);
-//        // 第二轮对话
-//        message = "我的女友是小红，我和她发生了一些争吵";
-//        String chat2 = loveApp.doChat(message, chatId);
-//        Assertions.assertNotNull(chat2);
-        // 第三轮对话
-//        message = "我的女友是谁？我忘了";
-//        String chat3 = loveApp.doChat(message, chatId);
-//        Assertions.assertNotNull(chat3);
+        // 第二轮对话
+        message = "我的女友是小红，我和她发生了一些争吵";
+        String chat2 = loveApp.doChat(message, chatId);
+        Assertions.assertNotNull(chat2);
+//         第三轮对话
+        message = "我叫什么名字";
+        String chat3 = loveApp.doChat(message, chatId);
+        Assertions.assertNotNull(chat3);
     }
 
     @Test
@@ -89,8 +89,9 @@ class LoveAppTest {
     @Test
     void doChatWithRag() {
         String message = "到底谁是lantz啊！！！！";
+        String state = "已婚";
         String chatId = UUID.randomUUID().toString();
-        String content = loveApp.doChatWithRag(message, chatId);
+        String content = loveApp.doChatWithRag(message, chatId, state);
         Assertions.assertNotNull(content);
     }
 

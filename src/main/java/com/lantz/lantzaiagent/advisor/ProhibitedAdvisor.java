@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ProhibitedAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
 
     // 核心违禁词库（实际项目应从数据库/文件加载）
-    private static final String BANNED_DIR = "bannedText/banned_word.txt";
+    private static final String BANNED_DIR = "bannedText/banned_words_1.txt";
 
     private Set<String> bannedSet;
 

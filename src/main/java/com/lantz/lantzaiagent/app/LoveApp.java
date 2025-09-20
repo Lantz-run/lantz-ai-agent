@@ -98,8 +98,9 @@ public class LoveApp {
 
     /**
      * 初始化对话记忆
-     *
      * @param dashscopeModel 大模型
+     * @param systemResource 系统提示词模板
+     * @param chatMemory 基于 MySQL对话记忆
      */
     public LoveApp(ChatModel dashscopeModel,
                    @Value("classpath:prompts/system-message.st") Resource systemResource,
@@ -109,13 +110,13 @@ public class LoveApp {
         // 基于内存持久化
 //        ChatMemory chatMemory1 = new InMemoryChatMemory();
         // 基于文件持久化
-        String fileDir = System.getProperty("user.dir") + "/tmp/chat-memory";
-        FileBasedChatMemory fileChatMemory = new FileBasedChatMemory(fileDir);
+//        String fileDir = System.getProperty("user.dir") + "/tmp/chat-memory";
+//        FileBasedChatMemory fileChatMemory = new FileBasedChatMemory(fileDir);
 
         chatClient = ChatClient.builder(dashscopeModel)
                 .defaultSystem(systemPrompt)
                 .defaultAdvisors(
-                        new MessageChatMemoryAdvisor(fileChatMemory),
+                        new MessageChatMemoryAdvisor(chatMemory),
 //                        new MyLoggerAdvisor(),      // 自定义日志拦截器
                         new ProhibitedAdvisor()     // 违禁词拦截器
 //                        new ReReadingAdvisor()    // 自定义重写拦截器
@@ -214,7 +215,7 @@ public class LoveApp {
      * @param chatId
      * @return
      */
-    public Flux<String> doChatWithRagByStream(String message, String chatId, String state) {
+    public Flux<String> doChatWithRagByStream(String message, String chatId, String status) {
         // 查询重写
         String reWriteMessage = queryRewriter.queryWriterTransformer(message);
         return chatClient.prompt()
@@ -227,7 +228,7 @@ public class LoveApp {
                 )
                 .advisors(
                         LoveAppRagCustomAdvisorFactory
-                                .createLoveAppRagCustomAdvisor(loveAppVectorStore, state)
+                                .createLoveAppRagCustomAdvisor(loveAppVectorStore, status)
                 ) // 文档检索增强
                 .stream()
                 .content();

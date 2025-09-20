@@ -1,3 +1,11 @@
+### CUSTOM ###
+tmp/
+application-local.yml
+application-prod.yml
+mcp-servers-config.json
+documents
+tmp
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
@@ -31,3 +39,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/tmp/chat-memory/c3da0dd8-3571-461a-a1a4-58a326607111.kryo

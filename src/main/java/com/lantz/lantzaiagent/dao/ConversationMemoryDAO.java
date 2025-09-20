@@ -36,7 +36,11 @@ public class ConversationMemoryDAO extends ServiceImpl<ConversationMemoryMapper,
                 .list();  // 执行查询并返回结果列表
     }
 
-
+    public boolean isConversationIdExist(String conversationId) {
+        return this.lambdaQuery()
+                .eq(ConversationMemory::getConversationId, conversationId)
+                .count() > 0;
+    }
 }
 
 
