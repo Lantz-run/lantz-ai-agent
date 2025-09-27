@@ -1,39 +1,37 @@
-package com.lantz.lantzaiagent.model.entity;
+package com.lantz.lantzaiagent.model.dto.ai;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lantz.lantzaiagent.common.PageRequest;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 
  * @TableName conversation_memory
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="conversation_memory")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConversationMemory implements Serializable {
+public class ConversationMemoryQueryRequest extends PageRequest implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = -7757577507770374460L;
     /**
-     * id
+     * 
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 会话id
+     * 
      */
     @TableField(value = "conversationId")
     private String conversationId;
@@ -42,34 +40,16 @@ public class ConversationMemory implements Serializable {
      * 用户id
      */
     @TableField(value = "userId")
-    private Long userId;
+    private String userId;
 
     /**
-     * 对话类型
-     */
-    @TableField(value = "type")
-    private String type;
-
-    /**
-     * 对话记忆
+     * 
      */
     @TableField(value = "memory")
     private String memory;
 
     /**
-     * 创建时间
-     */
-    @TableField(value = "createdTime")
-    private Date createdTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(value = "updatedTime")
-    private Date updatedTime;
-
-    /**
-     * 是否删除
+     * 
      */
     @TableField(value = "isDelete")
     private Integer isDelete;

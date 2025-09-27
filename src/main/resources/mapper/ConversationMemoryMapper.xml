@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.lantz.lantzaiagent.model.entity.ConversationMemory">
             <id property="id" column="id" />
             <result property="conversationId" column="conversationId" />
+            <result property="userId" column="userId" />
             <result property="type" column="type" />
             <result property="memory" column="memory" />
             <result property="createdTime" column="createdTime" />
@@ -15,7 +16,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,conversationId,type,memory,createdTime,updatedTime,
+        id,conversationId,userId,`type`,memory,createdTime,updatedTime,
         isDelete
     </sql>
 </mapper>
